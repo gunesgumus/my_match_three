@@ -1,0 +1,28 @@
+<mxfile host="Electron" modified="2024-05-04T12:07:39.433Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.2.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="h0rbkfnLpGkgo9304WH0" version="24.2.5" type="device">
+  <diagram name="Page-1" id="Yp4euS2os_xdrvkF56eh">
+    <mxGraphModel dx="1434" dy="836" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Ah8p70lpznkh9reXRp66-4" value="a piece is moved&lt;div&gt;to a neighbor location&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-1" target="Ah8p70lpznkh9reXRp66-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ah8p70lpznkh9reXRp66-1" value="Board Interaction State" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ah8p70lpznkh9reXRp66-5" value="swap is a valid&lt;div&gt;interaction&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-2" target="Ah8p70lpznkh9reXRp66-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ah8p70lpznkh9reXRp66-6" value="it is not a valid interaction" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-2" target="Ah8p70lpznkh9reXRp66-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ah8p70lpznkh9reXRp66-2" value="Board Piece Swap State" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ah8p70lpznkh9reXRp66-3" value="Board Destroy Pieces State" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
