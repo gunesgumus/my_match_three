@@ -1,9 +1,10 @@
-﻿using UnityEngine;
-
-namespace GNMS.MatchThree.Board
+﻿namespace GNMS.MatchThree
 {
-	public class BoardStateMachine : StateMachineBehaviour
+	public class BoardStateMachine : StateMachine.StateMachineBehaviour
 	{
+		protected override void ConstructStateMachine()
+		{
 
+		}
 	}
 }

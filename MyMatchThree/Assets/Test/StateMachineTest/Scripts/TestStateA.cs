@@ -1,8 +1,8 @@
-using GNMS.StateMachine;
-using UnityEngine;
-
-namespace GNMS.MatchThree.Test.StateMachineTest
+namespace GNMS.MatchThree.Test
 {
+	using GNMS.StateMachine;
+	using UnityEngine;
+
 	public class TestStateA : StateBehaviour
 	{
 		protected override void AfterEnter()
@@ -10,19 +10,19 @@ namespace GNMS.MatchThree.Test.StateMachineTest
 			Debug.LogWarning($"Entered test state A");
 		}
 
-		protected override void AfterEvaluate()
+		protected override void BeforeExit()
+		{
+			Debug.LogWarning($"Exiting test state A");
+		}
+
+		protected override void PostFixedUpdate()
 		{
 			Debug.Log($"Evaluated test state A");
 		}
 
-		protected override void BeforeEvaluate()
+		protected override void PreFixedUpdate()
 		{
 			Debug.Log($"Evaluating test state A");
-		}
-
-		protected override void BeforeExit()
-		{
-			Debug.LogWarning($"Exiting test state A");
 		}
 	}
 }

@@ -1,9 +1,8 @@
-using GNMS.StateMachine;
-using Unity.VisualScripting;
-using UnityEngine;
-
-namespace GNMS.MatchThree.Test.StateMachineTest
+namespace GNMS.MatchThree.Test
 {
+	using GNMS.StateMachine;
+	using UnityEngine;
+
 	public class StateMachineTestObject : StateMachine.StateMachineBehaviour
 	{
 		TestStateA testStateA;
@@ -37,8 +36,8 @@ namespace GNMS.MatchThree.Test.StateMachineTest
 
 		void AddStateBehaviours()
 		{
-			this.testStateA = this.AddComponent<TestStateA>();
-			this.testStateB = this.AddComponent<TestStateB>();
+			this.testStateA = this.gameObject.AddComponent<TestStateA>();
+			this.testStateB = this.gameObject.AddComponent<TestStateB>();
 		}
 
 		void CreateStateTransitions()

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace GNMS.StateMachine
+﻿namespace GNMS.StateMachine
 {
+	using System;
+	using System.Collections.Generic;
+	using UnityEngine;
+
 	public abstract class StateBehaviour : MonoBehaviour
 	{
 		public Action<StateBehaviour> OnStateTransition;
@@ -40,9 +40,9 @@ namespace GNMS.StateMachine
 			this.transitionConditionsAndTargetStates[transitionCondition] = targetState;
 		}
 
-		public void EvaluateState()
+		public void StateFixedUpdate()
 		{
-			this.BeforeEvaluate();
+			this.PreFixedUpdate();
 			foreach (Func<bool> transitionCondition in this.transitionConditionsAndTargetStates.Keys)
 			{
 				bool evaluationResult = transitionCondition();
@@ -53,7 +53,7 @@ namespace GNMS.StateMachine
 					break;
 				}
 			}
-			this.AfterEvaluate();
+			this.PostFixedUpdate();
 		}
 
 		public void EnterState()
@@ -68,10 +68,10 @@ namespace GNMS.StateMachine
 			this.UnsubscribeFromTransitionSignals();
 		}
 
-		protected abstract void BeforeEvaluate();
-		protected abstract void AfterEvaluate();
 		protected abstract void AfterEnter();
 		protected abstract void BeforeExit();
+		protected abstract void PostFixedUpdate();
+		protected abstract void PreFixedUpdate();
 
 		void SubscribeToTransitionSignals()
 		{

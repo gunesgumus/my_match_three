@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-
-namespace GNMS.StateMachine
+﻿namespace GNMS.StateMachine
 {
+	using UnityEngine;
+
 	public abstract class StateMachineBehaviour : MonoBehaviour
 	{
 		StateBehaviour activeState;
 
-		private void Awake()
+		protected virtual void Awake()
 		{
 			this.ConstructStateMachine();
 		}
@@ -26,7 +26,7 @@ namespace GNMS.StateMachine
 				return;
 			}
 
-			this.activeState.EvaluateState();
+			this.activeState.StateFixedUpdate();
 		}
 
 		public void SetState(StateBehaviour state)

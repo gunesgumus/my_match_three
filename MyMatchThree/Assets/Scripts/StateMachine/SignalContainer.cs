@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace GNMS.StateMachine
+﻿namespace GNMS.StateMachine
 {
+	using System;
+
 	public class SignalContainer
 	{
 		public Action<SignalContainer> signal;
