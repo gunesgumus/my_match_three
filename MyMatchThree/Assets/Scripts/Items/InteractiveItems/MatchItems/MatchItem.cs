@@ -11,7 +11,7 @@
 		Purple,
 	}
 
-	public class MatchItem : Item
+	public class MatchItem : InteractiveSlidableItem
 	{
 		[SerializeField]
 		MatchItemColor itemColor = MatchItemColor.Red;

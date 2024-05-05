@@ -1,19 +1,19 @@
-<mxfile host="Electron" modified="2024-05-04T12:18:26.719Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.2.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="ZLqIxqOh-dpMkPeuWvo9" version="24.2.5" type="device">
+<mxfile host="Electron" modified="2024-05-04T14:09:19.654Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.2.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="Lve8I3uf27VxfwbqLkg2" version="24.2.5" type="device">
   <diagram name="Page-1" id="Yp4euS2os_xdrvkF56eh">
-    <mxGraphModel dx="1834" dy="1236" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1434" dy="1236" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="Ah8p70lpznkh9reXRp66-4" value="a piece is moved&lt;div&gt;to a neighbor location&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-1" target="Ah8p70lpznkh9reXRp66-2">
+        <mxCell id="Ah8p70lpznkh9reXRp66-4" value="a piece is moved&lt;div&gt;to a neighbor location&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Ah8p70lpznkh9reXRp66-1" target="Ah8p70lpznkh9reXRp66-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-1" value="Board Interaction State" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ah8p70lpznkh9reXRp66-1" value="Board Interaction State" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry y="200" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-5" value="swap is a valid&lt;div&gt;interaction&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-2" target="Ah8p70lpznkh9reXRp66-3">
+        <mxCell id="Ah8p70lpznkh9reXRp66-5" value="swap is a valid&lt;div&gt;interaction&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Ah8p70lpznkh9reXRp66-2" target="Ah8p70lpznkh9reXRp66-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-6" value="it is not a valid interaction" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-2" target="Ah8p70lpznkh9reXRp66-1">
+        <mxCell id="Ah8p70lpznkh9reXRp66-6" value="it is not a valid interaction (swap back)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="Ah8p70lpznkh9reXRp66-2" target="Ah8p70lpznkh9reXRp66-1" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="340" y="300" />
@@ -21,36 +21,36 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-2" value="Board Piece Swap State" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ah8p70lpznkh9reXRp66-2" value="Board Piece Swap State" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="280" y="200" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-17" value="when all destruction ends, and if level targets are not complete yet" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-3" target="Ah8p70lpznkh9reXRp66-1">
+        <mxCell id="Ah8p70lpznkh9reXRp66-17" value="when all destruction ends, and if level targets are not complete yet" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="Ah8p70lpznkh9reXRp66-3" target="Ah8p70lpznkh9reXRp66-1" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="620" y="340" />
-              <mxPoint y="340" />
+              <mxPoint x="30" y="340" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-3" value="Board Destroy Pieces State" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ah8p70lpznkh9reXRp66-3" value="Board Destruction State" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="560" y="200" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-8" target="Ah8p70lpznkh9reXRp66-9">
+        <mxCell id="Ah8p70lpznkh9reXRp66-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Ah8p70lpznkh9reXRp66-8" target="Ah8p70lpznkh9reXRp66-9" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-8" value="Board" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ah8p70lpznkh9reXRp66-8" value="Board" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="280" y="-40" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-9" target="Ah8p70lpznkh9reXRp66-1">
+        <mxCell id="Ah8p70lpznkh9reXRp66-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Ah8p70lpznkh9reXRp66-9" target="Ah8p70lpznkh9reXRp66-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-9" target="Ah8p70lpznkh9reXRp66-2">
+        <mxCell id="Ah8p70lpznkh9reXRp66-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Ah8p70lpznkh9reXRp66-9" target="Ah8p70lpznkh9reXRp66-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ah8p70lpznkh9reXRp66-9" target="Ah8p70lpznkh9reXRp66-3">
+        <mxCell id="Ah8p70lpznkh9reXRp66-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Ah8p70lpznkh9reXRp66-9" target="Ah8p70lpznkh9reXRp66-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ah8p70lpznkh9reXRp66-9" value="BoardStateMachine" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ah8p70lpznkh9reXRp66-9" value="BoardStateMachine" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="280" y="80" width="120" height="60" as="geometry" />
         </mxCell>
       </root>

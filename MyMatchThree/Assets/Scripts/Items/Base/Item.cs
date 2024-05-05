@@ -4,9 +4,9 @@
 
 	public abstract class Item : MonoBehaviour
 	{
-		[SerializeField, Min(1)]
-		int itemWidth = 1;
-		[SerializeField, Min(1)]
-		int itemHeight = 1;
+		[SerializeField]
+		Vector2Int itemSize = new Vector2Int(1, 1);
+
+		public Vector2 ItemSize => this.itemSize;
 	}
 }
