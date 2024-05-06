@@ -15,14 +15,14 @@
 			Debug.LogWarning($"Exiting test state B");
 		}
 
-		protected override void PostFixedUpdate()
-		{
-			Debug.Log($"Evaluated test state B");
-		}
-
 		protected override void PreFixedUpdate()
 		{
 			Debug.Log($"Evaluating test state B");
+		}
+
+		protected override void PostFixedUpdate()
+		{
+			Debug.Log($"Evaluated test state B");
 		}
 	}
 }

@@ -15,14 +15,14 @@ namespace GNMS.MatchThree.Test
 			Debug.LogWarning($"Exiting test state A");
 		}
 
-		protected override void PostFixedUpdate()
-		{
-			Debug.Log($"Evaluated test state A");
-		}
-
 		protected override void PreFixedUpdate()
 		{
 			Debug.Log($"Evaluating test state A");
+		}
+
+		protected override void PostFixedUpdate()
+		{
+			Debug.Log($"Evaluated test state A");
 		}
 	}
 }

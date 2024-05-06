@@ -5,7 +5,7 @@
 		Board board;
 
 		BoardInteractionState boardInteractionState;
-		BoardPieceSwapState boardPieceSwapState;
+		BoardItemSwapState boardItemSwapState;
 		BoardDestructionState boardDestructionState;
 
 		protected override void ConstructStateMachine()
@@ -20,16 +20,16 @@
 		void AddStateBehaviours()
 		{
 			this.boardInteractionState = this.gameObject.AddComponent<BoardInteractionState>();
-			this.boardPieceSwapState = this.gameObject.AddComponent<BoardPieceSwapState>();
+			this.boardItemSwapState = this.gameObject.AddComponent<BoardItemSwapState>();
 			this.boardDestructionState = this.gameObject.AddComponent<BoardDestructionState>();
 		}
 
 		void CreateStateTransitions()
 		{
-			this.boardInteractionState.AssignTransitionSignal(this.boardPieceSwapState, this.board.OnItemSlideInput);
+			this.boardInteractionState.AssignTransitionSignal(this.boardItemSwapState, this.board.OnItemSlideInput);
 
-			this.boardPieceSwapState.AssignTransitionSignal(this.boardInteractionState, this.board.OnInvalidSlideComplete);
-			this.boardPieceSwapState.AssignTransitionSignal(this.boardDestructionState, this.board.OnValidSlideComplete);
+			this.boardItemSwapState.AssignTransitionSignal(this.boardInteractionState, this.board.OnInvalidSlideComplete);
+			this.boardItemSwapState.AssignTransitionSignal(this.boardDestructionState, this.board.OnValidSlideComplete);
 
 			this.boardDestructionState.AssignTransitionSignal(this.boardInteractionState, this.board.OnDestructionComplete);
 		}

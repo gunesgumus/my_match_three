@@ -12,12 +12,12 @@ namespace GNMS.MatchThree
 
 		}
 
-		protected override void PostFixedUpdate()
+		protected override void PreFixedUpdate()
 		{
 
 		}
 
-		protected override void PreFixedUpdate()
+		protected override void PostFixedUpdate()
 		{
 
 		}

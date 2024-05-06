@@ -5,22 +5,56 @@ namespace GNMS.MatchThree
 	using UnityEngine;
 	using UnityEngine.EventSystems;
 
-	public enum ItemSlideInput : byte
+	public enum ItemSlideDirection : byte
 	{
-		Right,
 		Left,
+		Right,
 		Up,
 		Down,
 	}
 
+	public static class ItemSlideDirectionExtensions
+	{
+		public static Vector2Int ConvertToVector2Int(this ItemSlideDirection slideDirection)
+		{
+			switch (slideDirection)
+			{
+				case ItemSlideDirection.Left:
+					return Vector2Int.left;
+				case ItemSlideDirection.Right:
+					return Vector2Int.right;
+				case ItemSlideDirection.Up:
+					return Vector2Int.up;
+				case ItemSlideDirection.Down:
+					return Vector2Int.down;
+			}
+			return Vector2Int.zero;
+		}
+
+		public static ItemSlideDirection ConvertToItemSlideDirection(this Vector3 slide)
+		{
+			return (Mathf.Abs(slide.x) >= Mathf.Abs(slide.y)) ?
+				(slide.x > 0f ? ItemSlideDirection.Right : ItemSlideDirection.Left) :
+				(slide.y > 0f ? ItemSlideDirection.Up : ItemSlideDirection.Down);
+		}
+	}
+
 	public class BoardInteractionOperative : MonoBehaviour
 	{
-		public Action<ItemSlideInput> OnItemSlideInput;
+		public Action<InteractiveSlidableItem, ItemSlideDirection> OnItemSlideInput;
 
 		Board board;
 
+		float minimumSlideDistance = 0.5f;
+
 		InteractiveSlidableItem interactedSlidableItem = null;
 		Vector3 interactionStartPosition;
+
+		public float MinimumSlideDistance
+		{
+			get => this.minimumSlideDistance;
+			set => minimumSlideDistance = value;
+		}
 
 		private void Awake()
 		{
@@ -30,46 +64,81 @@ namespace GNMS.MatchThree
 		private void Update()
 		{
 			this.HandleMouseDown();
+			this.HandleMouseSlide();
 			this.HandleMouseUp();
 		}
 
 		void HandleMouseDown()
 		{
-			if (Input.GetMouseButtonDown(0))
-			{
-				List<RaycastResult> eventSystemRaycastResults = new List<RaycastResult>();
-				EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current), eventSystemRaycastResults);
-				if (eventSystemRaycastResults.Count > 0)
-				{
-					return;
-				}
-				this.interactionStartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				this.interactedSlidableItem = this.board.GetItemAtPosition(this.interactionStartPosition) as InteractiveSlidableItem;
-				if (this.interactedSlidableItem != null)
-				{
-					Debug.Log($"obtained item: {this.interactedSlidableItem}, is null {this.interactedSlidableItem == null}", this.interactedSlidableItem.gameObject);
-				}
-				else
-				{
-					Debug.Log($"no item at position");
-				}
-			}
-		}
-
-		void HandleMouseUp()
-		{
-			if (this.interactedSlidableItem == null)
+			if (!Input.GetMouseButtonDown(0) || this.MouseInputIsObstructedByUI())
 			{
 				return;
 			}
 
-			if (Input.GetMouseButtonUp(0))
-			{
-				Vector3 interactionEndPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				Vector3 interactionSlide = interactionEndPosition - this.interactionStartPosition;
+			this.StartInteraction();
+		}
 
-				this.interactedSlidableItem = null;
+		bool MouseInputIsObstructedByUI()
+		{
+			List<RaycastResult> uiRaycastResults = new List<RaycastResult>();
+			EventSystem.current.RaycastAll(
+				new PointerEventData(EventSystem.current) { position = Input.mousePosition },
+				uiRaycastResults);
+			return uiRaycastResults.Count > 0;
+		}
+
+		void StartInteraction()
+		{
+			this.interactionStartPosition = this.GetMouseWorldPosition();
+			this.interactedSlidableItem = this.board.GetItemAtPosition(this.interactionStartPosition) as InteractiveSlidableItem;
+			if (this.interactedSlidableItem == null)
+			{
+				return;
 			}
+		}
+
+		void HandleMouseSlide()
+		{
+			if (!Input.GetMouseButton(0) || this.interactedSlidableItem == null)
+			{
+				return;
+			}
+
+			Vector3 mouseWorldPosition = this.GetMouseWorldPosition();
+			Vector3 slide = mouseWorldPosition - this.interactionStartPosition;
+			if (Mathf.Abs(slide.x) <= this.minimumSlideDistance && Mathf.Abs(slide.y) <= this.minimumSlideDistance)
+			{
+				return;
+			}
+
+			ItemSlideDirection slideDirection = slide.ConvertToItemSlideDirection();
+
+			this.OnItemSlideInput?.Invoke(
+				this.interactedSlidableItem,
+				slideDirection);
+			this.interactedSlidableItem = null;
+		}
+
+		void HandleMouseUp()
+		{
+			if (!Input.GetMouseButtonUp(0) || this.interactedSlidableItem == null)
+			{
+				return;
+			}
+
+			Vector3 interactionEndPosition = this.GetMouseWorldPosition();
+			Vector3 interactionSlide = interactionEndPosition - this.interactionStartPosition;
+
+			// TODO: if not enough distance for a slide, perform a click on the item if it allows
+
+			this.interactedSlidableItem = null;
+		}
+
+		Vector3 GetMouseWorldPosition()
+		{
+			Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			mouseWorldPosition.z = 0f;
+			return mouseWorldPosition;
 		}
 	}
 }
