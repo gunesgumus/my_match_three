@@ -31,7 +31,7 @@ namespace GNMS.MatchThree
 			foreach (Vector2Int relativeMatchPosition in this.relativeMatchPositions)
 			{
 				MatchItem matchItem = board.GetItemAtPosition(matchLocation + relativeMatchPosition) as MatchItem;
-				if (matchItem == null)
+				if (matchItem == null || !matchItem.IsStabilized)
 				{
 					return new List<MatchItem>();
 				}

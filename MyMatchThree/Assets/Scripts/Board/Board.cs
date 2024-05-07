@@ -4,6 +4,7 @@ namespace GNMS.MatchThree
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Unity.VisualScripting;
 	using UnityEngine;
 
 	public class Board : MonoBehaviour
@@ -51,6 +52,11 @@ namespace GNMS.MatchThree
 		private void OnDestroy()
 		{
 			this.UnsubscribeFromEvents();
+		}
+
+		private void Update()
+		{
+			this.MoveItemsDownAndCreateNewItemsAtTop();
 		}
 
 		public Item GetItemAtPosition(Vector2Int position)
@@ -114,7 +120,14 @@ namespace GNMS.MatchThree
 			List<Vector2Int> tilesOccupiedByItem = this.GetTilePositionsOccupiedByItem(item);
 			foreach (Vector2Int tileOccupiedByItem in tilesOccupiedByItem)
 			{
-				this.tilesInfo[tileOccupiedByItem.x, tileOccupiedByItem.y].ownerItem = null;
+				if (tileOccupiedByItem.y >= this.boardSize.y)
+				{
+					continue;
+				}
+				if (this.tilesInfo[tileOccupiedByItem.x, tileOccupiedByItem.y].ownerItem == item)
+				{
+					this.tilesInfo[tileOccupiedByItem.x, tileOccupiedByItem.y].ownerItem = null;
+				}
 			}
 		}
 
@@ -127,12 +140,82 @@ namespace GNMS.MatchThree
 			Vector2Int itemSizeInt = item.ItemSizeInt;
 			for (int x = 0; x < itemSizeInt.x; x++)
 			{
-				for (int y =0; y < itemSizeInt.y; y++)
+				for (int y = 0; y < itemSizeInt.y; y++)
 				{
 					tilePositionsOccupied.Add(itemTileBottomLeft + new Vector2Int(x, y));
 				}
 			}
 			return tilePositionsOccupied;
+		}
+
+		void MoveItemsDownAndCreateNewItemsAtTop()
+		{
+			Dictionary<int, int> emptyTilesHeight = new Dictionary<int, int>();
+			for (int x = 0; x < this.boardSize.x; x++)
+			{
+				int y = 0;
+				while (y < this.boardSize.y)
+				{
+					if (this.tilesInfo[x, y].ownerItem == null)
+					{
+						break;
+					}
+					y++;
+				}
+				emptyTilesHeight.Add(x, y);
+			}
+			for (int x = 0; x < this.boardSize.x; x++)
+			{
+				int heightOfEmptyTile = emptyTilesHeight[x];
+				int upperItemHeight = heightOfEmptyTile + 1;
+				while (heightOfEmptyTile < this.boardSize.y && upperItemHeight < this.boardSize.y)
+				{
+					Item upperItem = this.GetItemAtPosition(new Vector2Int(x, upperItemHeight));
+					if (upperItem == null)
+					{
+						upperItemHeight++;
+						continue;
+					}
+
+					if (upperItem is MovingItem movingItem)
+					{
+						this.tilesInfo[x, heightOfEmptyTile].ownerItem = movingItem;
+						this.tilesInfo[x, upperItemHeight].ownerItem = null;
+						// TODO: Move upperItem to heightOfEmptyTile
+						movingItem.DropToPosition(new Vector3(x, heightOfEmptyTile, 0f) + new Vector3(0.5f, 0.5f, 0f));
+						heightOfEmptyTile++;
+						upperItemHeight++;
+						continue;
+					}
+
+					heightOfEmptyTile = upperItemHeight + 1;
+					while (heightOfEmptyTile < this.boardSize.y)
+					{
+						if (this.tilesInfo[x, heightOfEmptyTile].ownerItem == null)
+						{
+							break;
+						}
+						heightOfEmptyTile++;
+					}
+					upperItemHeight = heightOfEmptyTile + 1;
+				}
+				int itemCountToCreateOnTop = Mathf.Max(0, this.boardSize.y - heightOfEmptyTile);
+				for (int count = 0; count < itemCountToCreateOnTop; count++)
+				{
+					MatchItem instantiatedMatchItem = Instantiate(
+						this.matchItemPrefabs[UnityEngine.Random.Range(0, this.matchItemPrefabs.Length)],
+						this.transform);
+					float itemCreationHeight = Mathf.Max(
+						this.tilesInfo[x, heightOfEmptyTile - 1].ownerItem.transform.position.y + 1f,
+						this.boardSize.y + 0.5f);
+					Vector3 itemCreationPosition = new Vector3(x + 0.5f, itemCreationHeight, 0f);
+					instantiatedMatchItem.transform.position = itemCreationPosition;
+					this.tilesInfo[x, heightOfEmptyTile].ownerItem = instantiatedMatchItem;
+					instantiatedMatchItem.DropToPosition(new Vector3(x, heightOfEmptyTile, 0f) + new Vector3(0.5f, 0.5f, 0f));
+					heightOfEmptyTile++;
+					upperItemHeight++;
+				}
+			}
 		}
 
 		void InitializeData()
@@ -182,12 +265,16 @@ namespace GNMS.MatchThree
 
 					MatchItem matchItemPrefab = this.colorToMatchItemMapping[possibleColors[UnityEngine.Random.Range(0, possibleColors.Count)]];
 					MatchItem instantiatedMatchItem = Instantiate(matchItemPrefab, this.transform);
-					Vector3 itemCenterOffset = instantiatedMatchItem.ItemSize / 2;
-					Vector3 instantiatedPosition = new Vector3(x, y, 0) + itemCenterOffset;
-					instantiatedMatchItem.transform.position = instantiatedPosition;
+					instantiatedMatchItem.transform.position = this.GetItemWorldPosition(instantiatedMatchItem, new Vector2Int(x, y));
 					this.tilesInfo[x, y].ownerItem = instantiatedMatchItem;
 				}
 			}
+		}
+
+		Vector3 GetItemWorldPosition(Item item, Vector2Int tilePosition)
+		{
+			Vector3 itemCenterOffset = item.ItemSize / 2;
+			return new Vector3(tilePosition.x, tilePosition.y, 0) + itemCenterOffset;
 		}
 
 		void InitializeComponents()

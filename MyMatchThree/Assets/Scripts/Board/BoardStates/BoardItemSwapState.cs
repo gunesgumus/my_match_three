@@ -5,6 +5,8 @@ namespace GNMS.MatchThree
 
 	public class BoardItemSwapState : StateMachine.StateBehaviour
 	{
+		const float waitDurationAfterInvalidSwap = 0.5f;
+
 		Board board;
 
 		private void Awake()
@@ -47,6 +49,7 @@ namespace GNMS.MatchThree
 			}
 			else
 			{
+				yield return new WaitForSeconds(BoardItemSwapState.waitDurationAfterInvalidSwap);
 				this.board.SwapItems(primarySwapItem, secondarySwapItem);
 				yield return new WaitUntil(() => primarySwapItem.IsStabilized && secondarySwapItem.IsStabilized);
 				this.board.HandleInvalidSlide();
