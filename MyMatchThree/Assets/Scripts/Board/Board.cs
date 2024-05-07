@@ -10,8 +10,6 @@ namespace GNMS.MatchThree
 	{
 		[SerializeField]
 		Vector2Int boardSize = new Vector2Int(5, 5);
-		[SerializeField, Min(0)]
-		float tileSize = 1;
 		[SerializeField, Min(0f)]
 		float minimumSlideDistance = 0.5f;
 		[Header("Prefabs")]
@@ -67,8 +65,8 @@ namespace GNMS.MatchThree
 
 		public Item GetItemAtPosition(Vector3 position)
 		{
-			int x = Mathf.FloorToInt(position.x / this.tileSize);
-			int y = Mathf.FloorToInt(position.y / this.tileSize);
+			int x = Mathf.FloorToInt(position.x);
+			int y = Mathf.FloorToInt(position.y);
 			return (x >= 0 && x < this.boardSize.x && y >= 0 && y < this.boardSize.y) ?
 				this.tilesInfo[x, y].ownerItem :
 				null;
@@ -109,6 +107,32 @@ namespace GNMS.MatchThree
 		public void HandleInvalidSlide()
 		{
 			this.OnInvalidSlideComplete.EmitSignal();
+		}
+
+		public void RemoveItem(Item item)
+		{
+			List<Vector2Int> tilesOccupiedByItem = this.GetTilePositionsOccupiedByItem(item);
+			foreach (Vector2Int tileOccupiedByItem in tilesOccupiedByItem)
+			{
+				this.tilesInfo[tileOccupiedByItem.x, tileOccupiedByItem.y].ownerItem = null;
+			}
+		}
+
+		List<Vector2Int> GetTilePositionsOccupiedByItem(Item item)
+		{
+			Vector2 itemPosition = item.transform.position;
+			Vector2 itemBottomLeft = itemPosition - item.ItemSize / 2;
+			Vector2Int itemTileBottomLeft = new Vector2Int(Mathf.RoundToInt(itemBottomLeft.x), Mathf.RoundToInt(itemBottomLeft.y));
+			List<Vector2Int> tilePositionsOccupied = new List<Vector2Int>();
+			Vector2Int itemSizeInt = item.ItemSizeInt;
+			for (int x = 0; x < itemSizeInt.x; x++)
+			{
+				for (int y =0; y < itemSizeInt.y; y++)
+				{
+					tilePositionsOccupied.Add(itemTileBottomLeft + new Vector2Int(x, y));
+				}
+			}
+			return tilePositionsOccupied;
 		}
 
 		void InitializeData()
@@ -159,7 +183,7 @@ namespace GNMS.MatchThree
 					MatchItem matchItemPrefab = this.colorToMatchItemMapping[possibleColors[UnityEngine.Random.Range(0, possibleColors.Count)]];
 					MatchItem instantiatedMatchItem = Instantiate(matchItemPrefab, this.transform);
 					Vector3 itemCenterOffset = instantiatedMatchItem.ItemSize / 2;
-					Vector3 instantiatedPosition = this.tileSize * new Vector3(x, y, 0) + itemCenterOffset;
+					Vector3 instantiatedPosition = new Vector3(x, y, 0) + itemCenterOffset;
 					instantiatedMatchItem.transform.position = instantiatedPosition;
 					this.tilesInfo[x, y].ownerItem = instantiatedMatchItem;
 				}

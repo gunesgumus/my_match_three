@@ -6,7 +6,7 @@
 
 	public abstract class MovingItem : Item
 	{
-		const float movementDuration = 0.5f;
+		const float movementDuration = 0.2f;
 
 		public Action<MovingItem> OnMovementComplete;
 
