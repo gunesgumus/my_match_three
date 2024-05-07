@@ -130,6 +130,7 @@ namespace GNMS.MatchThree
 			Vector3 interactionSlide = interactionEndPosition - this.interactionStartPosition;
 
 			// TODO: if not enough distance for a slide, perform a click on the item if it allows
+			// Implement this after adding power-ups
 
 			this.interactedSlidableItem = null;
 		}

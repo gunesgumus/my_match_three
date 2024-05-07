@@ -3,6 +3,7 @@
 	public class BoardStateMachine : StateMachine.StateMachineBehaviour
 	{
 		Board board;
+		BoardMatchCheckerOperative boardMatchCheckerOperative;
 
 		BoardInteractionState boardInteractionState;
 		BoardItemSwapState boardItemSwapState;
@@ -11,6 +12,7 @@
 		protected override void ConstructStateMachine()
 		{
 			this.board = this.GetComponent<Board>();
+			this.boardMatchCheckerOperative = this.GetComponent<BoardMatchCheckerOperative>();
 
 			this.AddStateBehaviours();
 			this.CreateStateTransitions();
@@ -31,7 +33,9 @@
 			this.boardItemSwapState.AssignTransitionSignal(this.boardInteractionState, this.board.OnInvalidSlideComplete);
 			this.boardItemSwapState.AssignTransitionSignal(this.boardDestructionState, this.board.OnValidSlideComplete);
 
-			this.boardDestructionState.AssignTransitionSignal(this.boardInteractionState, this.board.OnDestructionComplete);
+			this.boardDestructionState.AssignTransitionCondition(
+				this.boardInteractionState,
+				() => !this.board.InteractionIsStalled);
 		}
 	}
 }

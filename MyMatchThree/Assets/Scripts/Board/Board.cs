@@ -20,7 +20,6 @@ namespace GNMS.MatchThree
 		public SignalContainer OnItemSlideInput = new SignalContainer();
 		public SignalContainer OnInvalidSlideComplete = new SignalContainer();
 		public SignalContainer OnValidSlideComplete = new SignalContainer();
-		public SignalContainer OnDestructionComplete = new SignalContainer();
 
 		BoardStateMachine boardStateMachine;
 
@@ -35,6 +34,9 @@ namespace GNMS.MatchThree
 		public Vector2Int Size => this.boardSize;
 		public MovingItem PrimarySwapItem => this.primarySwapItem;
 		public MovingItem SecondarySwapItem => this.secondarySwapItem;
+
+		// TODO: Implement this after adding LightBall, etc., since that stalls interaction while being destroyed
+		public bool InteractionIsStalled => false;
 
 		private void Awake()
 		{

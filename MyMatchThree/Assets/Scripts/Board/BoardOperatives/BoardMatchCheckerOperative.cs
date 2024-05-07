@@ -88,19 +88,20 @@
 						foreach (MatchItem matchedItem in matchedItems)
 						{
 							this.matchItemToMatchItemCollectionMapping.Add(matchedItem, matchedItemCollection);
-							if (this.matchItemToMatchItemCollectionMapping.Keys.Count() > 0)
-							{
-								Debug.Log($"mapping key count {this.matchItemToMatchItemCollectionMapping.Keys.Count()}");
-							}
 						}
 						continue;
 					}
 					// some are registered, some are not
 					MatchItem firstRegisteredItem = matchedItems.First(matchedItem => this.ItemIsRegisteredForMatch(matchedItem));
 					MatchedItemCollection registeredItemCollection = this.matchItemToMatchItemCollectionMapping[firstRegisteredItem];
-					registeredItemCollection.AddMatchItems(matchedItems
+					List<MatchItem> unregisteredMatchItems = matchedItems
 						.Where(matchedItem => !this.ItemIsRegisteredForMatch(matchedItem))
-						.ToList());
+						.ToList();
+					registeredItemCollection.AddMatchItems(unregisteredMatchItems);
+					foreach (MatchItem unregisteredMatchItem in unregisteredMatchItems)
+					{
+						this.matchItemToMatchItemCollectionMapping.Add(unregisteredMatchItem, registeredItemCollection);
+					}
 				}
 			}
 		}
