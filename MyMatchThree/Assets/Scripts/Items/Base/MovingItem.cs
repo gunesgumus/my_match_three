@@ -1,14 +1,13 @@
 ﻿namespace GNMS.MatchThree
 {
-	using System;
 	using System.Collections;
 	using UnityEngine;
 
 	public abstract class MovingItem : Item
 	{
 		const float movementDuration = 0.2f;
-		const float dropSpeedAcceleration = 10f;
-		const float maxDropSpeed = 20f;
+		const float dropSpeedAcceleration = 20f;
+		const float maxDropSpeed = 10f;
 
 		bool isStabilized = true;
 
