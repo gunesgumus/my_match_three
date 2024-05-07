@@ -1,6 +1,9 @@
 namespace GNMS.MatchThree
 {
 	using GNMS.StateMachine;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	using UnityEngine;
 
 	public class Board : MonoBehaviour
@@ -30,6 +33,7 @@ namespace GNMS.MatchThree
 		MovingItem secondarySwapItem;
 
 		TileInfo[,] tilesInfo;
+		Dictionary<MatchItemColor, MatchItem> colorToMatchItemMapping = new Dictionary<MatchItemColor, MatchItem>();
 
 		public Vector2Int Size => this.boardSize;
 		public MovingItem PrimarySwapItem => this.primarySwapItem;
@@ -40,6 +44,7 @@ namespace GNMS.MatchThree
 
 		private void Awake()
 		{
+			this.InitializeData();
 			this.InitializeBoardContent();
 			this.InitializeComponents();
 			this.SubscribeToEvents();
@@ -54,7 +59,7 @@ namespace GNMS.MatchThree
 		{
 			if (position.x < 0 || position.x >= this.boardSize.x || position.y < 0 || position.y >= this.boardSize.y)
 			{
-				throw new System.ArgumentOutOfRangeException(nameof(position), $"Position is outside the bounds of the board.");
+				throw new System.ArgumentOutOfRangeException(nameof(position), $"Position is outside the boundaries of the board.");
 			}
 
 			return this.tilesInfo[position.x, position.y].ownerItem;
@@ -106,15 +111,52 @@ namespace GNMS.MatchThree
 			this.OnInvalidSlideComplete.EmitSignal();
 		}
 
-		void InitializeBoardContent()
+		void InitializeData()
 		{
 			this.tilesInfo = new TileInfo[this.boardSize.x, this.boardSize.y];
+
+			foreach (MatchItem matchItemPrefab in this.matchItemPrefabs)
+			{
+				this.colorToMatchItemMapping.Add(matchItemPrefab.ItemColor, matchItemPrefab);
+			}
+		}
+
+		void InitializeBoardContent()
+		{
+			// These must be enough to avoid all other currently existing match patterns as well
+			MatchPattern[] matchPatternsToAvoid = new[]
+			{
+				// two unit square
+				new MatchPattern(new[] { Vector2Int.zero, Vector2Int.right, Vector2Int.up, Vector2Int.right + Vector2Int.up }),
+				// horizontal triple linear
+				new MatchPattern(new[] { Vector2Int.zero, Vector2Int.right, 2 * Vector2Int.right }),
+				// vertical triple linear
+				new MatchPattern(new[] { Vector2Int.zero, Vector2Int.up, 2 * Vector2Int.up }),
+			};
 
 			for (int x = 0; x < this.boardSize.x; x++)
 			{
 				for (int y = 0; y < this.boardSize.y; y++)
 				{
-					MatchItem matchItemPrefab = this.matchItemPrefabs[Random.Range(0, this.matchItemPrefabs.Length)];
+					Vector2Int position = new Vector2Int(x, y);
+					List<MatchItemColor> possibleColors = Enum.GetValues(typeof(MatchItemColor)).Cast<MatchItemColor>().ToList();
+
+					foreach (MatchPattern matchPatternToAvoid in matchPatternsToAvoid)
+					{
+						Vector2Int leftBottom = position - (matchPatternToAvoid.ExtentMax - matchPatternToAvoid.ExtentMin);
+						if (leftBottom.x < 0 || leftBottom.y < 0)
+						{
+							continue;
+						}
+						Vector2Int matchLocation = position - matchPatternToAvoid.ExtentMax;
+						MatchItemColor? colorToAvoid = matchPatternToAvoid.GetMatchColorToAvoidForTargetPosition(this, matchLocation, position);
+						if (colorToAvoid.HasValue)
+						{
+							possibleColors.Remove(colorToAvoid.Value);
+						}
+					}
+
+					MatchItem matchItemPrefab = this.colorToMatchItemMapping[possibleColors[UnityEngine.Random.Range(0, possibleColors.Count)]];
 					MatchItem instantiatedMatchItem = Instantiate(matchItemPrefab, this.transform);
 					Vector3 itemCenterOffset = instantiatedMatchItem.ItemSize / 2;
 					Vector3 instantiatedPosition = this.tileSize * new Vector3(x, y, 0) + itemCenterOffset;

@@ -1,5 +1,6 @@
 namespace GNMS.MatchThree
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using UnityEngine;
@@ -45,6 +46,39 @@ namespace GNMS.MatchThree
 				matchedItems.Add(matchItem);
 			}
 			return matchedItems;
+		}
+
+		public MatchItemColor? GetMatchColorToAvoidForTargetPosition(Board board, Vector2Int matchLocation, Vector2Int targetPosition)
+		{
+
+			if (this.relativeMatchPositions.All(relativeMatchPosition => matchLocation + relativeMatchPosition != targetPosition))
+			{
+				return null;
+			}
+
+			MatchItemColor? matchColor = null;
+			foreach (Vector2Int relativeMatchPosition in this.relativeMatchPositions)
+			{
+				Vector2Int position = matchLocation + relativeMatchPosition;
+				if (position == targetPosition)
+				{
+					continue;
+				}
+				MatchItem matchItem = board.GetItemAtPosition(position) as MatchItem;
+				if (matchItem == null)
+				{
+					return null;
+				}
+				if (!matchColor.HasValue)
+				{
+					matchColor = matchItem.ItemColor;
+				}
+				if (matchItem.ItemColor != matchColor.Value)
+				{
+					return null;
+				}
+			}
+			return matchColor;
 		}
 	}
 }
