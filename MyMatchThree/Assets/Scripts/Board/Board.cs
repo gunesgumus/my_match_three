@@ -1,10 +1,8 @@
 namespace GNMS.MatchThree
 {
 	using GNMS.StateMachine;
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using Unity.VisualScripting;
 	using UnityEngine;
 
 	public class Board : MonoBehaviour
@@ -177,7 +175,7 @@ namespace GNMS.MatchThree
 						continue;
 					}
 
-					if (upperItem is MovingItem movingItem)
+					if (upperItem is MovingItem movingItem && movingItem.IsStabilized)
 					{
 						this.tilesInfo[x, heightOfEmptyTile].ownerItem = movingItem;
 						this.tilesInfo[x, upperItemHeight].ownerItem = null;
@@ -203,7 +201,7 @@ namespace GNMS.MatchThree
 				for (int count = 0; count < itemCountToCreateOnTop; count++)
 				{
 					MatchItem instantiatedMatchItem = Instantiate(
-						this.matchItemPrefabs[UnityEngine.Random.Range(0, this.matchItemPrefabs.Length)],
+						this.matchItemPrefabs[Random.Range(0, this.matchItemPrefabs.Length)],
 						this.transform);
 					float itemCreationHeight = Mathf.Max(
 						this.tilesInfo[x, heightOfEmptyTile - 1].ownerItem.transform.position.y + 1f,
@@ -246,7 +244,7 @@ namespace GNMS.MatchThree
 				for (int y = 0; y < this.boardSize.y; y++)
 				{
 					Vector2Int position = new Vector2Int(x, y);
-					List<MatchItemColor> possibleColors = Enum.GetValues(typeof(MatchItemColor)).Cast<MatchItemColor>().ToList();
+					List<MatchItemColor> possibleColors = this.colorToMatchItemMapping.Keys.ToList();
 
 					foreach (MatchPattern matchPatternToAvoid in matchPatternsToAvoid)
 					{
@@ -263,7 +261,12 @@ namespace GNMS.MatchThree
 						}
 					}
 
-					MatchItem matchItemPrefab = this.colorToMatchItemMapping[possibleColors[UnityEngine.Random.Range(0, possibleColors.Count)]];
+					if (possibleColors.Count <= 0)
+					{
+						throw new System.InvalidOperationException($"No possible {nameof(MatchItemColor)} could be found for position {new Vector2Int(x, y)}!");
+					}
+
+					MatchItem matchItemPrefab = this.colorToMatchItemMapping[possibleColors[Random.Range(0, possibleColors.Count)]];
 					MatchItem instantiatedMatchItem = Instantiate(matchItemPrefab, this.transform);
 					instantiatedMatchItem.transform.position = this.GetItemWorldPosition(instantiatedMatchItem, new Vector2Int(x, y));
 					this.tilesInfo[x, y].ownerItem = instantiatedMatchItem;
@@ -313,7 +316,8 @@ namespace GNMS.MatchThree
 			}
 
 			Item otherTileItem = this.tilesInfo[otherTile.x, otherTile.y].ownerItem;
-			if (otherTileItem is MovingItem otherMovingItem && otherMovingItem.IsStabilized)
+			if (otherTileItem is MovingItem otherMovingItem &&
+				otherMovingItem.IsStabilized)
 			{
 				this.primarySwapItem = slidableItem;
 				this.secondarySwapItem = otherMovingItem;

@@ -1,5 +1,6 @@
 namespace GNMS.MatchThree
 {
+	using System.Collections;
 	using System.Collections.Generic;
 	using UnityEngine;
 
@@ -14,10 +15,14 @@ namespace GNMS.MatchThree
 
 	public class MatchedItemCollection
 	{
+		const float matchAnimationDuration = 0.25f;
+
 		Board board;
 		List<MatchItem> matchedItems;
 		MatchItem activeMatchItem;
 		PowerUpToProduce powerUpToProduce;
+
+		bool isMatching = false;
 
 		public List<MatchItem> MatchedItems => this.matchedItems;
 		public MatchItem ActiveMatchItem => this.activeMatchItem;
@@ -48,6 +53,41 @@ namespace GNMS.MatchThree
 				{
 					this.activeMatchItem = secondaryMatchItem;
 				}
+			}
+		}
+
+		public void Match()
+		{
+			if (this.isMatching)
+			{
+				return;
+			}
+
+			this.isMatching = true;
+			foreach (MatchItem matchItem in this.matchedItems)
+			{
+				matchItem.SetStable(false);
+			}
+			this.board.StartCoroutine(this.MatchCoroutine());
+		}
+
+		IEnumerator MatchCoroutine()
+		{
+			float timer = 0f;
+			float duration = MatchedItemCollection.matchAnimationDuration;
+			while (timer < duration)
+			{
+				yield return new WaitForEndOfFrame();
+				float scale = Mathf.SmoothStep(1, 0, timer / duration);
+				foreach (MatchItem matchItem in this.matchedItems)
+				{
+					matchItem.transform.localScale = scale * Vector3.one;
+				}
+				timer += Time.deltaTime;
+			}
+			foreach (MatchItem matchItem in this.matchedItems)
+			{
+				GameObject.Destroy(matchItem.gameObject);
 			}
 		}
 	}

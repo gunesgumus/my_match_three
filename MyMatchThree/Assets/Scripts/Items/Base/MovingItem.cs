@@ -10,6 +10,7 @@
 		const float maxDropSpeed = 10f;
 
 		bool isStabilized = true;
+		Coroutine dropCoroutine = null;
 
 		public bool IsStabilized => this.isStabilized;
 
@@ -20,7 +21,16 @@
 
 		public void DropToPosition(Vector3 targetPosition)
 		{
-			StartCoroutine(this.DropToPositionCoroutine(targetPosition, MovingItem.movementDuration));
+			if (this.dropCoroutine != null)
+			{
+				StopCoroutine(this.dropCoroutine);
+			}
+			this.dropCoroutine = StartCoroutine(this.DropToPositionCoroutine(targetPosition, MovingItem.movementDuration));
+		}
+
+		public void SetStable(bool isStable)
+		{
+			this.isStabilized = isStable;
 		}
 
 		IEnumerator MoveToPositionCoroutine(Vector3 targetPosition, float duration)

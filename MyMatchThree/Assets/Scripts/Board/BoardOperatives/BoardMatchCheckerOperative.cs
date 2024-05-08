@@ -18,7 +18,7 @@
 				(new TwoUnitSquareMatchPatternProvider(), PowerUpToProduce.Propeller),
 				(new TripleLinearMatchPatternProvider(), PowerUpToProduce.None),
 			};
-		Dictionary<MatchItem, MatchedItemCollection> matchItemToMatchItemCollectionMapping = new();
+		Dictionary<MatchItem, MatchedItemCollection> matchItemToMatchedItemCollectionMapping = new();
 		bool alreadyCheckedDuringCurrentUpdate = false;
 
 		private void Awake()
@@ -44,11 +44,16 @@
 			return this.ItemIsRegisteredForMatch(matchItem);
 		}
 
+		public bool ItemIsRegisteredForMatch(MatchItem matchItem)
+		{
+			return this.matchItemToMatchedItemCollectionMapping.ContainsKey(matchItem);
+		}
+
 		void PopRegisteredMatchItems()
 		{
-			foreach (MatchItem matchItem in this.matchItemToMatchItemCollectionMapping.Keys)
+			foreach (MatchedItemCollection matchedItemCollection in this.matchItemToMatchedItemCollectionMapping.Values)
 			{
-				Destroy(matchItem.gameObject);
+				matchedItemCollection.Match();
 			}
 			this.ClearRegisteredMatchItems();
 			this.alreadyCheckedDuringCurrentUpdate = false;
@@ -87,33 +92,28 @@
 						MatchedItemCollection matchedItemCollection = new MatchedItemCollection(board, matchedItems, powerUpToProduce);
 						foreach (MatchItem matchedItem in matchedItems)
 						{
-							this.matchItemToMatchItemCollectionMapping.Add(matchedItem, matchedItemCollection);
+							this.matchItemToMatchedItemCollectionMapping.Add(matchedItem, matchedItemCollection);
 						}
 						continue;
 					}
 					// some are registered, some are not
 					MatchItem firstRegisteredItem = matchedItems.First(matchedItem => this.ItemIsRegisteredForMatch(matchedItem));
-					MatchedItemCollection registeredItemCollection = this.matchItemToMatchItemCollectionMapping[firstRegisteredItem];
+					MatchedItemCollection registeredItemCollection = this.matchItemToMatchedItemCollectionMapping[firstRegisteredItem];
 					List<MatchItem> unregisteredMatchItems = matchedItems
 						.Where(matchedItem => !this.ItemIsRegisteredForMatch(matchedItem))
 						.ToList();
 					registeredItemCollection.AddMatchItems(unregisteredMatchItems);
 					foreach (MatchItem unregisteredMatchItem in unregisteredMatchItems)
 					{
-						this.matchItemToMatchItemCollectionMapping.Add(unregisteredMatchItem, registeredItemCollection);
+						this.matchItemToMatchedItemCollectionMapping.Add(unregisteredMatchItem, registeredItemCollection);
 					}
 				}
 			}
 		}
 
-		bool ItemIsRegisteredForMatch(MatchItem matchItem)
-		{
-			return this.matchItemToMatchItemCollectionMapping.ContainsKey(matchItem);
-		}
-
 		void ClearRegisteredMatchItems()
 		{
-			this.matchItemToMatchItemCollectionMapping.Clear();
+			this.matchItemToMatchedItemCollectionMapping.Clear();
 		}
 	}
 }

@@ -49,6 +49,11 @@ namespace GNMS.MatchThree
 			}
 			else
 			{
+				// prevent items from being calculated for other match checks while animating
+				// after swapped back, they will get stable automatically
+				primarySwapItem.SetStable(false);
+				secondarySwapItem.SetStable(false);
+
 				yield return new WaitForSeconds(BoardItemSwapState.waitDurationAfterInvalidSwap);
 				this.board.SwapItems(primarySwapItem, secondarySwapItem);
 				yield return new WaitUntil(() => primarySwapItem.IsStabilized && secondarySwapItem.IsStabilized);

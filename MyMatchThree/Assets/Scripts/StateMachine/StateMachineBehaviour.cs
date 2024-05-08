@@ -4,6 +4,7 @@
 
 	public abstract class StateMachineBehaviour : MonoBehaviour
 	{
+		[SerializeField]
 		StateBehaviour activeState;
 
 		protected virtual void Awake()
