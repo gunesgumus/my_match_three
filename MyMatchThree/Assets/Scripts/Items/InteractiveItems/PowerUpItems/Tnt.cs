@@ -1,7 +1,14 @@
 namespace GNMS.MatchThree
 {
+	using UnityEngine;
+
 	public class Tnt : PowerUpItem
 	{
+		public override bool CheckBoardPlacement(Board board)
+		{
+			return false;
+		}
+
 		public override void Combine(PowerUpItem other)
 		{
 			if (other is LightBall lightball)

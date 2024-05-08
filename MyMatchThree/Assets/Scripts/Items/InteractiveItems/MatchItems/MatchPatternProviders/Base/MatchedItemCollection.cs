@@ -86,7 +86,10 @@ namespace GNMS.MatchThree
 			}
 			if (this.powerUpType != null)
 			{
-				Debug.Log($"Create power-up type: {this.powerUpType}");
+				PowerUpItem  powerUpItemPrefab = this.board.GetPowerUpItemPrefab(this.powerUpType);
+				PowerUpItem instantiatedPowerUpItem = GameObject.Instantiate(powerUpItemPrefab, this.board.transform);
+				instantiatedPowerUpItem.transform.position = this.activeMatchItem.transform.position;
+				this.board.InsertItem(instantiatedPowerUpItem);
 			}
 		}
 	}

@@ -139,6 +139,16 @@ namespace GNMS.MatchThree
 			return this.powerUpTypeToPowerUpPrefabMapping[powerUpItemType];
 		}
 
+		public void InsertItem(Item item)
+		{
+			Vector2Int tilePosition = this.WorldPositionToTile(item.transform.position);
+			if (this.tilesInfo[tilePosition.x, tilePosition.y].ownerItem != null)
+			{
+				Destroy(this.tilesInfo[tilePosition.x, tilePosition.y].ownerItem);
+			}
+			this.tilesInfo[tilePosition.x, tilePosition.y].ownerItem = item;
+		}
+
 		List<Vector2Int> GetTilePositionsOccupiedByItem(Item item)
 		{
 			Vector2 itemPosition = item.transform.position;
