@@ -66,7 +66,7 @@ namespace GNMS.MatchThree
 			this.isMatching = true;
 			foreach (MatchItem matchItem in this.matchedItems)
 			{
-				matchItem.SetStable(false);
+				matchItem.SetStabilized(false);
 			}
 			this.board.StartCoroutine(this.MatchCoroutine());
 		}

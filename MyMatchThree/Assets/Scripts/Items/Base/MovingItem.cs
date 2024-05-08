@@ -28,7 +28,7 @@
 			this.dropCoroutine = StartCoroutine(this.DropToPositionCoroutine(targetPosition, MovingItem.movementDuration));
 		}
 
-		public void SetStable(bool isStable)
+		public void SetStabilized(bool isStable)
 		{
 			this.isStabilized = isStable;
 		}

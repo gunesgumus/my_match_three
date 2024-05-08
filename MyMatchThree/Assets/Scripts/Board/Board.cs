@@ -204,8 +204,8 @@ namespace GNMS.MatchThree
 						this.matchItemPrefabs[Random.Range(0, this.matchItemPrefabs.Length)],
 						this.transform);
 					float itemCreationHeight = Mathf.Max(
-						this.tilesInfo[x, heightOfEmptyTile - 1].ownerItem.transform.position.y + 1f,
-						this.boardSize.y + 0.5f);
+							heightOfEmptyTile > 0 ? (this.tilesInfo[x, heightOfEmptyTile - 1].ownerItem.transform.position.y + 1f) : 0.5f,
+							this.boardSize.y + 0.5f); 
 					Vector3 itemCreationPosition = new Vector3(x + 0.5f, itemCreationHeight, 0f);
 					instantiatedMatchItem.transform.position = itemCreationPosition;
 					this.tilesInfo[x, heightOfEmptyTile].ownerItem = instantiatedMatchItem;
