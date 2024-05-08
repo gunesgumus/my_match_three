@@ -8,15 +8,15 @@
 	{
 		Board board;
 
-		List<(MatchPatternProvider matchPatternProvider, PowerUpToProduce powerUpToProduce)>
+		List<(MatchPatternProvider matchPatternProvider, System.Type powerUpType)>
 			matchPatternProvidersAndPowerUpsToProduceSortedByPrecedence = new()
 			{
-				(new QuintupleLinearMatchPatternProvider(), PowerUpToProduce.LightBall),
-				(new TShapedMatchPatternProvider(), PowerUpToProduce.Tnt),
-				(new LShapedMatchPatternProvider(), PowerUpToProduce.Tnt),
-				(new QuadrupleLinearMatchPatternProvider(), PowerUpToProduce.Rocket),
-				(new TwoUnitSquareMatchPatternProvider(), PowerUpToProduce.Propeller),
-				(new TripleLinearMatchPatternProvider(), PowerUpToProduce.None),
+				(new QuintupleLinearMatchPatternProvider(), typeof(LightBall)),
+				(new TShapedMatchPatternProvider(), typeof(Tnt)),
+				(new LShapedMatchPatternProvider(), typeof(Tnt)),
+				(new QuadrupleLinearMatchPatternProvider(), typeof(Rocket)),
+				(new TwoUnitSquareMatchPatternProvider(), typeof(Propeller)),
+				(new TripleLinearMatchPatternProvider(), null),
 			};
 		Dictionary<MatchItem, MatchedItemCollection> matchItemToMatchedItemCollectionMapping = new();
 		bool alreadyCheckedDuringCurrentUpdate = false;
@@ -64,16 +64,16 @@
 			foreach (var matchPatterProviderAndTargetItem in this.matchPatternProvidersAndPowerUpsToProduceSortedByPrecedence)
 			{
 				MatchPatternProvider matchPatternProvider = matchPatterProviderAndTargetItem.matchPatternProvider;
-				PowerUpToProduce powerUpToProduce = matchPatterProviderAndTargetItem.powerUpToProduce;
+				System.Type powerUpType = matchPatterProviderAndTargetItem.powerUpType;
 				MatchPattern[] acceptableMatchPatterns = matchPatternProvider.AcceptableMatchPatterns;
 				foreach (MatchPattern acceptableMatchPattern in acceptableMatchPatterns)
 				{
-					this.DetectMatchPattern(acceptableMatchPattern, powerUpToProduce);
+					this.DetectMatchPattern(acceptableMatchPattern, powerUpType);
 				}
 			}
 		}
 
-		void DetectMatchPattern(MatchPattern matchPattern, PowerUpToProduce powerUpToProduce)
+		void DetectMatchPattern(MatchPattern matchPattern, System.Type powerUpType)
 		{
 			Vector2Int boardStartPosition = -matchPattern.ExtentMin;
 			Vector2Int boardEndPosition = this.board.Size - Vector2Int.one - matchPattern.ExtentMax;
@@ -89,7 +89,7 @@
 					}
 					if (matchedItems.All(matchedItem => !this.ItemIsRegisteredForMatch(matchedItem)))
 					{
-						MatchedItemCollection matchedItemCollection = new MatchedItemCollection(board, matchedItems, powerUpToProduce);
+						MatchedItemCollection matchedItemCollection = new MatchedItemCollection(board, matchedItems, powerUpType);
 						foreach (MatchItem matchedItem in matchedItems)
 						{
 							this.matchItemToMatchedItemCollectionMapping.Add(matchedItem, matchedItemCollection);

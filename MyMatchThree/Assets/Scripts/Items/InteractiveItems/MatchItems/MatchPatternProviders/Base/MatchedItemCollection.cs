@@ -4,15 +4,6 @@ namespace GNMS.MatchThree
 	using System.Collections.Generic;
 	using UnityEngine;
 
-	public enum PowerUpToProduce
-	{
-		None,
-		LightBall,
-		Tnt,
-		Rocket,
-		Propeller,
-	}
-
 	public class MatchedItemCollection
 	{
 		const float matchAnimationDuration = 0.25f;
@@ -20,16 +11,20 @@ namespace GNMS.MatchThree
 		Board board;
 		List<MatchItem> matchedItems;
 		MatchItem activeMatchItem;
-		PowerUpToProduce powerUpToProduce;
+		System.Type powerUpType;
 
 		bool isMatching = false;
 
 		public List<MatchItem> MatchedItems => this.matchedItems;
 		public MatchItem ActiveMatchItem => this.activeMatchItem;
-		public PowerUpToProduce PowerUpToProduce => this.powerUpToProduce;
 
-		public MatchedItemCollection(Board board, List<MatchItem> items, PowerUpToProduce powerUpToProduce)
+		public MatchedItemCollection(Board board, List<MatchItem> items, System.Type powerUpType)
 		{
+			if (powerUpType != null && !powerUpType.IsSubclassOf(typeof(PowerUpItem)))
+			{
+				throw new System.ArgumentException($"Argument type must inherit from {nameof(PowerUpItem)}!", nameof(powerUpType));
+			}
+
 			this.board = board;
 			this.matchedItems = items;
 			this.activeMatchItem = (this.board.PrimarySwapItem is MatchItem primaryMatchItem && this.matchedItems.Contains(primaryMatchItem)) ?
@@ -37,7 +32,7 @@ namespace GNMS.MatchThree
 				((this.board.SecondarySwapItem is MatchItem secondaryMatchItem && this.matchedItems.Contains(secondaryMatchItem)) ?
 					secondaryMatchItem :
 					this.matchedItems[Random.Range(0, this.matchedItems.Count)]);
-			this.powerUpToProduce = powerUpToProduce;
+			this.powerUpType = powerUpType;
 		}
 
 		public void AddMatchItems(List<MatchItem> matchItems)
@@ -88,6 +83,10 @@ namespace GNMS.MatchThree
 			foreach (MatchItem matchItem in this.matchedItems)
 			{
 				GameObject.Destroy(matchItem.gameObject);
+			}
+			if (this.powerUpType != null)
+			{
+				Debug.Log($"Create power-up type: {this.powerUpType}");
 			}
 		}
 	}

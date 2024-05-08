@@ -31,6 +31,7 @@ namespace GNMS.MatchThree
 
 		TileInfo[,] tilesInfo;
 		Dictionary<MatchItemColor, MatchItem> colorToMatchItemMapping = new Dictionary<MatchItemColor, MatchItem>();
+		Dictionary<System.Type, PowerUpItem> powerUpTypeToPowerUpPrefabMapping = new Dictionary<System.Type, PowerUpItem>();
 
 		public Vector2Int Size => this.boardSize;
 		public MovingItem PrimarySwapItem => this.primarySwapItem;
@@ -129,6 +130,15 @@ namespace GNMS.MatchThree
 			}
 		}
 
+		public PowerUpItem GetPowerUpItemPrefab(System.Type powerUpItemType)
+		{
+			if (powerUpItemType == null || !powerUpItemType.IsSubclassOf(typeof(PowerUpItem)))
+			{
+				throw new System.ArgumentException($"Argument type must inherit from {nameof(PowerUpItem)}!", nameof(powerUpItemType));
+			}
+			return this.powerUpTypeToPowerUpPrefabMapping[powerUpItemType];
+		}
+
 		List<Vector2Int> GetTilePositionsOccupiedByItem(Item item)
 		{
 			Vector2 itemPosition = item.transform.position;
@@ -205,7 +215,7 @@ namespace GNMS.MatchThree
 						this.transform);
 					float itemCreationHeight = Mathf.Max(
 							heightOfEmptyTile > 0 ? (this.tilesInfo[x, heightOfEmptyTile - 1].ownerItem.transform.position.y + 1f) : 0.5f,
-							this.boardSize.y + 0.5f); 
+							this.boardSize.y + 0.5f);
 					Vector3 itemCreationPosition = new Vector3(x + 0.5f, itemCreationHeight, 0f);
 					instantiatedMatchItem.transform.position = itemCreationPosition;
 					this.tilesInfo[x, heightOfEmptyTile].ownerItem = instantiatedMatchItem;
@@ -223,6 +233,11 @@ namespace GNMS.MatchThree
 			foreach (MatchItem matchItemPrefab in this.matchItemPrefabs)
 			{
 				this.colorToMatchItemMapping.Add(matchItemPrefab.ItemColor, matchItemPrefab);
+			}
+
+			foreach (PowerUpItem powerUpItemPrefab in this.powerUpItemPrefabs)
+			{
+				this.powerUpTypeToPowerUpPrefabMapping[powerUpItemPrefab.GetType()] = powerUpItemPrefab;
 			}
 		}
 
